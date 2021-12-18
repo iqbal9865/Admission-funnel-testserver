@@ -28,6 +28,7 @@ client.connect( err => {
   const webinarRegistrationCollection = client.db("admissionFunnel").collection("webinarRegistration");
   const campaignCollection = client.db("admissionFunnel").collection("campaigns");
   const onlineAdmissionCollection = client.db("admissionFunnel").collection("onlineAdmission");
+  const paymentCollection = client.db("admissionFunnel").collection("payment");
    
     app.post('/addBlogs', (req, res) => {
         const blog = req.body;
@@ -158,6 +159,21 @@ client.connect( err => {
         blogsCollection.deleteOne({_id: ObjectId(req.params.id)})
         .then((result) => {
             console.log(result)
+        })
+    })
+    app.post('/addPayment', (req, res) => {
+        const payment = req.body;
+        console.log(payment)
+        paymentCollection.insertOne(payment)
+        .then( result => {
+            res.send(result.insertedCount > 0);
+        })
+    })
+    app.get('/payment', (req, res) => {
+        paymentCollection.find()
+        .toArray((err,payment) => {
+            res.send(payment)
+            console.log('From Database', payment)
         })
     })
 
